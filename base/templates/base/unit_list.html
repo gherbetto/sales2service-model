@@ -1,0 +1,14 @@
+<h1>ТО Порядок</h1>
+
+<table>
+    <tr>
+        <th>Unit</th>
+    </tr>
+    {% for unit in units %}
+    <tr>
+        <td>{{unit.title}}</td>
+    </tr>
+    {% empty %}
+        <h3>Очередь пуста</h3>
+    {% endfor %}
+</table>
