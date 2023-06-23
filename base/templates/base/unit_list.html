@@ -1,12 +1,17 @@
 <h1>ТО Порядок</h1>
+<a href="{% url 'unit-create' %}">Добавить в очередь</a>
 
 <table>
     <tr>
-        <th>Unit</th>
+        <th>Погрузчик</th>
+        <th></th>
     </tr>
     {% for unit in units %}
     <tr>
         <td>{{unit.title}}</td>
+        <td><a href="{% url 'unit' unit.id %}">Посмотреть</a></td>
+        <td><a href="{% url 'unit-update' unit.id %}">Изменить</a></td>
+        <td><a href="{% url 'unit-delete' unit.id %}">Удалить</a></td>
     </tr>
     {% empty %}
         <h3>Очередь пуста</h3>

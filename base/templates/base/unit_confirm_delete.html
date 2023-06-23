@@ -1,0 +1,6 @@
+<a href="{% url 'units' %}">Назад</a>
+<form method="POST">
+    {%csrf_token%}
+    <p>Вы уверены вы хотите удалить это из очереди? {{unit}}</p>
+    <input type="submit" value="Удалить">
+</form>
