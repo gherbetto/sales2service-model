@@ -4,28 +4,44 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
+from django.contrib.auth.views import LoginView
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import Unit
 
-class UnitList(ListView):
+class CustomLoginView(LoginView):
+    template_name = 'base/login.html'
+    fields = '__all__'
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        return reverse_lazy('units')
+
+class UnitList(LoginRequiredMixin, ListView):
     model = Unit
     context_object_name = 'units'
 
-class UnitDetail(DetailView):
+class UnitDetail(LoginRequiredMixin, DetailView):
     model = Unit
     context_object_name = 'unit'
     template_name = 'base/unit.html'
 
-class UnitCreate(CreateView):
+class UnitCreate(LoginRequiredMixin, CreateView):
     model = Unit
-    fields = '__all__'
+    fields = ['title', 'description', 'complete']
     success_url = reverse_lazy('units')
 
-class UnitUpdate(UpdateView):
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(UnitCreate, self).form_valid(form)
+
+class UnitUpdate(LoginRequiredMixin, UpdateView):
     model = Unit
-    fields = '__all__'
+    fields = ['title', 'description', 'complete']
     success_url = reverse_lazy('units')
 
-class UnitDelete(DeleteView):
+class UnitDelete(LoginRequiredMixin, DeleteView):
     model = Unit
     context_object_name = 'unit'
     success_url = reverse_lazy('units')
