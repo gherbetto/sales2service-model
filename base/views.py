@@ -22,6 +22,16 @@ class UnitList(LoginRequiredMixin, ListView):
     model = Unit
     context_object_name = 'units'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_input = self.request.GET.get('search-area') or ''
+        if search_input:
+            context['units'] = context['units'].filter(
+                title__icontains=search_input)
+
+        context['search_input'] = search_input
+
+        return context
 class UnitDetail(LoginRequiredMixin, DetailView):
     model = Unit
     context_object_name = 'unit'
