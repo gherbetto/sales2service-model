@@ -1,31 +1,49 @@
-{% if request.user.is_authenticated %}
-    <p>{{ request.user }}</p>
-    <a href="{% url 'logout' %}">Logout</a>
-    {% else %}
-    <a href="{% url 'login' %}">Login</a>
-{% endif %}
-<hr>
-<h1>ТО Порядок</h1>
-<a href="{% url 'unit-create' %}">Добавить в очередь</a>
+{% extends 'base/main.html' %}
+{% block content %}
 
-<form method="get">
-    <input type="text" name="search-area" value="{{ search_input }}">
-    <input type="submit" value="Search">
-</form>
+    <div class="header-bar">
+        <div>
+            <h1>Здравствуйте {{ request.user|title }}</h1>
+            <h3 style="margin: 0">Сегодня в очереди: <i>{{ count }}</i> единиц{{ count|pluralize:"а,ы"}}</h3>
+        </div>
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
 
-<table>
-    <tr>
-        <th>Погрузчик</th>
-        <th></th>
-    </tr>
-    {% for unit in units %}
-    <tr>
-        <td>{{unit.title}}</td>
-        <td><a href="{% url 'unit' unit.id %}">Посмотреть</a></td>
-        <td><a href="{% url 'unit-update' unit.id %}">Изменить</a></td>
-        <td><a href="{% url 'unit-delete' unit.id %}">Удалить</a></td>
-    </tr>
-    {% empty %}
-        <h3>Очередь пуста</h3>
-    {% endfor %}
-</table>
+
+    <div id="search-add-wrapper">
+        <form method="get" style="margin-top: 20px; display: flex;">
+            <input type="text" name="search-area" value="{{ search_input }}">
+            <input class="button" type="submit" value="Search">
+        </form>
+    <a id="add-link" href="{% url 'unit-create' %}">&#x2b;</a>
+    </div>
+
+
+    <div class="unit-items-wrapper">
+        {% for unit in units %}
+            <div class="unit-wrapper">
+                {% if unit.complete %}
+                    <div class="unit-title">
+                        <div class="unit-complete-icon"></div>
+                        <i><s><a href="{% url 'unit-update' unit.id %}">{{ unit }}</a></s></i>
+                    </div>
+                    <a class="delete-link" href="{% url 'unit-delete' unit.id %}">&#215;</a>
+                {% else %}
+                    <div class="unit-title">
+                        <div class="unit-incomplete-icon"></div>
+                        <a href="{% url 'unit-update' unit.id %}">{{ unit }}</a>
+                    </div>
+                    <a class="delete-link" href="{% url 'unit-delete' unit.id %}">&#215;</a>
+                {% endif %}
+            </div>
+
+        {% empty %}
+            <h3>Очередь пуста</h3>
+        {% endfor %}
+    </div>
+
+{% endblock content %}

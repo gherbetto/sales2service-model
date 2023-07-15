@@ -1,6 +1,17 @@
-<a href="{% url 'units' %}">Назад</a>
-<form method="POST">
-    {%csrf_token%}
-    <p>Вы уверены вы хотите удалить это из очереди? {{unit}}</p>
-    <input type="submit" value="Удалить">
-</form>
+{% extends 'base/main.html' %}
+{% block content %}
+
+    <div class="header-bar">
+        <a href="{% url 'units' %}">&#8592; Назад</a>
+    </div>
+
+    <div class="card-body">
+        <form method="POST">
+            {%csrf_token%}
+            <p>Вы уверены вы хотите удалить это из очереди? {{unit}}</p>
+            <input class="button" type="submit" value="Удалить">
+        </form>
+    </div>
+
+
+{% endblock content %}
